@@ -8,20 +8,36 @@ from pprint import pprint
 
 # Functions:
 def makeParagraphs(file):
+
+    '''
+    Takes in a file and divides it into paragraphs.
+    '''
+
     paragraphs = [];
     paragraph = '';
     
     for line in f.readlines():
+        # if it is not possible to strip the line, it means it contains no words
+        # and is therefore the end of a paragraph
         if not line.strip():
+            # simple check to see that the paragraph is not empty.
             if(paragraph != ""):
                 paragraphs.append(paragraph);
                 paragraph = "";
         else:
+            # Adding line by line to the paragraph until we hit a whitespace.
             paragraph += line
 
     return paragraphs;
 
 def removeWord(word, array):
+    '''
+    Removes a paragraph from the array
+    should it contain the given word.
+    Since it is not possible to just .pop the
+    element from the array, we have to create 
+    a temp array which will serve as our new array.
+    '''
     tempArray = [];
     for item in array:
         if word not in item:
@@ -30,15 +46,24 @@ def removeWord(word, array):
     return tempArray;
 
 def tokenize(array):
+    '''Tokenizes the array. Basically
+    makes every word in a sentance into a
+    seperate element. Returns a 2D array.
+    Uses the nltk package for more accurate splits.
+    '''
     tempArray = [];
     for item in array:
         tempArray.append(nltk.word_tokenize(item))
-        #paragraphs.append(item.split());
     return tempArray;
 
-
 def removePunctuationAndLower(array):
-    remove = string.punctuation + "\n\r\t";
+    '''
+    Removes puctuation and white space
+    from an array. First checks to see if the
+    array is multidimensional or one dimensional.
+    Works on both.
+    '''
+    remove = string.punctuation + "\n\r\t"; # The characters we want removed
     tempArray = [];
     tempParagraph = [];
     # Checking if array is 2D or 1D
@@ -66,8 +91,13 @@ def removePunctuationAndLower(array):
                 tempArray.append(newWord.lower());
     return tempArray;
 
-
 def stem(array):
+    '''
+    Stemming function. Also works on
+    both 1D and 2D arrays. Uses the PorterStemmer
+    from the nltk package. Returns an the array
+    containing the stemmed words.
+    '''
     stemmer = PorterStemmer();
     if isinstance(array[0], list):
         for i in range(len(array)):
@@ -80,8 +110,10 @@ def stem(array):
     return array;
 
 def getStopWordIDs(stopwords, dictionary):
-    stopWordIDs = []
-    
+    '''Function for returning the IDs of 
+    the stopwords from the passed dictionary.
+    '''
+    stopWordIDs = [];
     for word in stopwords:
         try:
             stopWordIDs.append(dictionary.token2id[word])
@@ -90,12 +122,19 @@ def getStopWordIDs(stopwords, dictionary):
     return stopWordIDs;
 
 def convertToBagOfWords(array, dictionary):
+    '''Function for converting an array
+    of stemmed words into a Bag of Words.
+    '''
     vector = [];
     for p in array:
         vector.append(dictionary.doc2bow(p))
     return vector;
 
 def makeQuery(query):
+    '''Takes in a string-query
+    and converts it into a split, stemmed
+    arary without punctuation and in lower case.
+    '''
     query = query.split(" ");
     query = removePunctuationAndLower(query);
     query = stem(query);
