@@ -42,7 +42,10 @@ public class MyDocument{
 		NewsDocument newsDocument = new NewsDocument(f);
 
 		//TODO: create structured lucene document
-
+		doc.add(new TextField("ID", 		newsDocument.getId(), 		Field.Store.YES));
+		doc.add(new TextField("From", 	newsDocument.getFrom(), 	Field.Store.YES));
+		doc.add(new TextField("Subject", 	newsDocument.getSubject(), 	Field.Store.YES));
+		doc.add(new TextField("Content", 	newsDocument.getContent(), 	Field.Store.YES));
 
 		return doc;
 	}
